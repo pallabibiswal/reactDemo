@@ -1,85 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import axios from 'axios';
+import IncrementNumber from './IncrementNumber';
+import GitUser from './GitUser';
+import Game from './Game';
 
-class Button extends React.Component {
-
-    handleClick = () => {
-        this.props.onClickFunction(this.props.increamentValue);
-    };
-
-    render() {
-        return (
-            <button onClick = {this.handleClick}> + {this.props.increamentValue} </button>
-        );
-    }
-}
-
-const Result = (props) => {
-    return (
-        <div> {props.increamentValue} </div>
-    );
-};
-
-const Card = (props) => {
-    return (
-        <div style={{margin: '1em'}}>
-            <img width = "75" src={props.avatar_url} />
-            <div style={{display:'inline-block', marginLeft:10}}>
-                <div style={{fontSize:'1.5em', fontWeight:'bold'}}>
-                    {props.login}
-                </div>
-            </div>
-        </div>
-    );
-};
-
-
-
-const CardList = (props) => {
-    return (
-        <div>
-            {props.card.map( card => <Card key = {card.id } {...card} />)};
-        </div>
-    );
-};
-
-
-
-class Form extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {UserName : ''};
-    }
-
-    handleSubmit = (event) => {
-        event.preventDefault();
-        axios.get(`https://api.github.com/users/${this.state.UserName}`)
-            .then(resp => {
-                this.props.onSubmit(resp.data);
-                this.setState({ UserName : ''});
-            });
-    };
-
-    render() {
-        return (
-            <div>
-                <form onSubmit={this.handleSubmit}>
-                    <input type="test"
-                    value = {this.state.UserName}
-                    onChange = {(event) => this.setState({UserName : event.target.value})}
-                    placeholder="GitHub Username" required/>
-                    <button type="submit"> Add card </button>
-                </form>
-            </div>
-        );
-    };
-}
-
-
-class Inc extends React.Component {
+class App extends React.Component {
 
     constructor(props) {
         super(props);
@@ -103,17 +28,14 @@ class Inc extends React.Component {
     render() {
         return (
         <div>
-            <Button increamentValue = {1} onClickFunction = {this.increamentCounter}/>
-            <Button increamentValue = {5} onClickFunction = {this.increamentCounter}/>
-            <Button increamentValue = {10} onClickFunction = {this.increamentCounter}/>
-            <Button increamentValue = {100} onClickFunction = {this.increamentCounter}/>
-            <Result increamentValue = {this.state.counter}/>
-            <Form onSubmit={this.addNewCard}/>
-            <CardList card={this.state.cards} />
+            <IncrementNumber counter={this.state.counter}
+                             incrementMethod = {this.increamentCounter}/>
+            <GitUser onSubmit={this.addNewCard} card={this.state.cards}/>
+            <Game />
         </div>
         );
     }
 }
 
 
-export default Inc;
+export default App;
